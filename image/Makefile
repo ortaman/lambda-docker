@@ -1,8 +1,8 @@
 push_stori_test:
-	aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.us-west-1.amazonaws.com
+	aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin 992382549868.dkr.ecr.us-west-1.amazonaws.com
 	docker build -t stori-test-ecr .
-	docker tag stori-test-ecr:latest <aws_account_id>.dkr.ecr.us-west-1.amazonaws.com/stori-test-ecr:latest
-	docker push <aws_account_id>.dkr.ecr.us-west-1.amazonaws.com/stori-test-ecr:latest
+	docker tag stori-test-ecr:latest 992382549868.dkr.ecr.us-west-1.amazonaws.com/stori-test-ecr:latest
+	docker push 992382549868.dkr.ecr.us-west-1.amazonaws.com/stori-test-ecr:latest
 
 
 docker_prune:
@@ -24,6 +24,11 @@ docker_prune_with_volumes:
 test_local:
 	curl "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{}'
 	curl "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{"body": "{\"emails\":\"ente011@gmail.com\"}"}'
+
+
+test_deploy:
+	curl "${AWS_INVOKE_URL}" -d '{}'
+	curl "${AWS_INVOKE_URL}" -d '{"emails":"ente011@gmail.com"}'
 
 
 # https://docs.docker.com/engine/reference/commandline/compose_down/

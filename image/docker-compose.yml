@@ -5,11 +5,11 @@ services:
     build: .
     container_name: stori-test
     environment:
-      - EMAIL_HOST=smtp_host
-      - EMAIL_PORT=smtp_port
-      - EMAIL_FROM=email_from@gmail.com"
-      - EMAIL_USER=smtp_username
-      - EMAIL_PASS=smtp_password
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
     volumes:
       - ./src:/var/task
     ports:

@@ -10,13 +10,13 @@
 git clone https://github.com/ortaman/stori-test.git
 ```
 
-- Edit `docker-compose.yml` file with your environment variables:
+- Add the environment variables in the console:
 ```
-- EMAIL_HOST=smtp_host
-- EMAIL_PORT=smtp_port
-- EMAIL_FROM=email_from@gmail.com"
-- EMAIL_USER=smtp_username
-- EMAIL_PASS=smtp_password
+- export EMAIL_HOST=smtp_host
+- export EMAIL_PORT=smtp_port
+- export EMAIL_FROM=email_from@gmail.com"
+- export EMAIL_USER=smtp_username
+- export EMAIL_PASS=smtp_password
 
 - Open a terminal and go to image folder and run:
 ```bash
