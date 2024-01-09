@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  lambda:
+    build: .
+    container_name: stori-test
+    environment:
+      - EMAIL_HOST=smtp_host
+      - EMAIL_PORT=smtp_port
+      - EMAIL_FROM=email_from@gmail.com"
+      - EMAIL_USER=smtp_username
+      - EMAIL_PASS=smtp_password
+    volumes:
+      - ./src:/var/task
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
