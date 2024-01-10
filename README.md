@@ -7,7 +7,7 @@
 ## Set up and run the project:
 - Clone the repository to your local machine:
 ```bash
-git clone https://github.com/ortaman/stori-test.git
+git clone https://github.com/ortaman/lambda-docker.git
 ```
 
 - Add the environment variables in the console:
