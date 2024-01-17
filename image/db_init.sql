@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS customers (
 
 CREATE TABLE IF NOT EXISTS transactions (
     id int NOT NULL,
-    transaction_date Date,
-    transaction varchar(100),
+    trans_date varchar(5),
+    amount varchar(100),
     PRIMARY KEY (id)
 );

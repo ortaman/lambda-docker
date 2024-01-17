@@ -21,8 +21,11 @@ docker-prune-volumes:
 	docker system prune -a --volumes
 	docker-compose up
 
-db-bash:
-	docker exec -it stori-test bash
+bash-lambda:
+	docker exec -it stori-lambda bash
+
+bash-db:
+	docker exec -it stori-db bash
 # psql -h localhost -U postgres
 
 test-local:

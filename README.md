@@ -10,7 +10,7 @@
 git clone https://github.com/ortaman/lambda-docker.git
 ```
 
-- Add the environment variables in the console:
+- Open a terminal and add the environment variables in the console:
 ```
 - export EMAIL_HOST=smtp_host
 - export EMAIL_PORT=smtp_port
@@ -18,7 +18,7 @@ git clone https://github.com/ortaman/lambda-docker.git
 - export EMAIL_USER=smtp_username
 - export EMAIL_PASS=smtp_password
 
-- Open a terminal and go to image folder and run:
+- Go to image folder and run:
 ```bash
 docker compose up
 ```

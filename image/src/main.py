@@ -2,10 +2,29 @@ import csv
 import email.message
 import json
 import os
+import pandas as pd
+import psycopg2
 import smtplib
+import logging
+
+from io import StringIO
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 EMAIL_SUBJECT = 'STORI CHALLENGE'
+CSV_DIR = 'transactions.csv'
+DB_TABLE_NAME = 'transactions'
+
+
+POSTGRES_USER = os.environ['POSTGRES_USER']
+POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
+
+POSTGRES_DB = os.environ['POSTGRES_DB']
+POSTGRES_HOST = os.environ['POSTGRES_HOST']
+POSTGRES_PORT = os.environ['POSTGRES_PORT']
 
 
 class CSVTransactions:
@@ -162,6 +181,46 @@ class CSVTransactions:
                 msg=msg.as_string()
             )
 
+    def insert_data_from_file(self):
+        try:
+            connection = psycopg2.connect(
+                database=POSTGRES_DB,
+                host=POSTGRES_HOST,
+                port=POSTGRES_PORT,
+                user=POSTGRES_USER,
+                password=POSTGRES_PASSWORD
+            )
+
+        except psycopg2.OperationalError as exception:
+            logger.error("ERROR: Error connecting to the database")
+            logger.error(exception)
+            print(exception)
+
+        csv_file = open(CSV_DIR, 'r')
+        df = pd.read_csv(CSV_DIR)
+        df.set_index('Id', inplace=True)
+
+        buffer = StringIO()
+        df.to_csv(buffer, index_label='Id', header=False)
+        buffer.seek(0)
+
+        contents = buffer.getvalue()
+        print(contents)
+
+        try:
+            cursor = connection.cursor()
+            cursor.copy_from(file=buffer, table=DB_TABLE_NAME, sep=',')
+            connection.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            logger.error("ERROR: Inserting data in transactions table")
+            logger.error("Error: %s" % error)
+            connection.rollback()
+
+        finally:
+            if connection is not None:
+                connection.close()
+
 
 def handler(event, context):
 
@@ -183,8 +242,14 @@ def handler(event, context):
 
     csv_transactions = CSVTransactions()
     csv_transactions.send_email_smtp(emails_to_send)
+    csv_transactions.insert_data_from_file()
 
     return {
         'statusCode': 200,
         'body': 'email sended'
     }
+
+
+# csv_transactions = CSVTransactions()
+# csv_transactions.send_email_smtp('ente011@gmail.com')
+# csv_transactions.insert_data_from_file()
