@@ -15,7 +15,7 @@ logger.setLevel(logging.INFO)
 
 
 EMAIL_SUBJECT = 'STORI CHALLENGE'
-CSV_DIR = 'data/transactions.csv'
+CSV_DIR = 'transactions.csv'
 DB_TABLE_NAME = 'transactions'
 
 
@@ -42,8 +42,8 @@ class CSVTransactions:
         '11': 'November',
         '12': 'December',
     }
-
-    def _get_transactions(self):
+    
+    def _get_transactions_info(self):
         with open(CSV_DIR, "r") as csv_file:
             total_balance = 0
             debit_average = 0
@@ -79,8 +79,28 @@ class CSVTransactions:
         return transactions_by_month, transactions_resume
 
 
+    def _get_transactions_info_using_pandas(self):
+        df = pd.read_csv(
+            filepath_or_buffer=CSV_DIR,
+            parse_dates=['Date'],
+            dtype={'Transaction': float, 'Id': int}
+        )
+
+        group_transactions = df.groupby(df['Date'].dt.strftime('%B'), sort=False)
+        transactions_by_month = group_transactions.count().to_dict()
+        print(transactions_by_month)
+
+
+        transactions_resume = {
+            'average_debit': df[df['Transaction'] < 0]['Transaction'].mean(),
+            'average_credit': df[df['Transaction'] > 0]['Transaction'].mean(),
+            'total_balance': df['Transaction'].sum(),
+        }
+        return transactions_by_month, transactions_resume
+
+
     def _generate_body(self):
-        transactions_by_month, transactions_resume = self._get_transactions()
+        transactions_by_month, transactions_resume = self._get_transactions_info_using_pandas()
 
         body = f"""
             <html>

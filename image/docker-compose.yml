@@ -30,11 +30,11 @@ services:
       - EMAIL_FROM=${EMAIL_FROM}
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_PASS=${EMAIL_PASS}
+      - POSTGRES_DB=db_stori
       - POSTGRES_HOST=stori-db
       - POSTGRES_PORT=5432
       - POSTGRES_USER=db_user
       - POSTGRES_PASSWORD=db_pass
-      - POSTGRES_DB=db_stori
     volumes:
       - ./src:/var/task
     ports:

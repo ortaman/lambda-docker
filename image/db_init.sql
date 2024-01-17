@@ -11,6 +11,6 @@ CREATE TABLE IF NOT EXISTS customers (
 CREATE TABLE IF NOT EXISTS transactions (
     id int NOT NULL,
     trans_date Date,
-    float amount,
+    amount FLOAT,
     PRIMARY KEY (id)
 );
