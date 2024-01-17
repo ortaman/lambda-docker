@@ -6,17 +6,13 @@ services:
   stori-db:
     image: postgres
     container_name: stori-db
-#    env_file:
-#      - env.dev
     volumes:
       - ./volumes/pgdata:/var/lib/postgresql/data/
       - ./db_init.sql:/docker-entrypoint-initdb.d/db_init.sql
-#    networks:
-#      - main  # Add the container to the network "main"
     environment:
        - POSTGRES_DB=db_stori
        - POSTGRES_HOST=localhost
-       - POSTGRES_PORT='5432'
+       - POSTGRES_PORT=5432
        - POSTGRES_USER=db_user
        - POSTGRES_PASSWORD=db_pass
     ports:

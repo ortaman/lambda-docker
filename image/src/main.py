@@ -15,7 +15,7 @@ logger.setLevel(logging.INFO)
 
 
 EMAIL_SUBJECT = 'STORI CHALLENGE'
-CSV_DIR = 'transactions.csv'
+CSV_DIR = 'data/transactions.csv'
 DB_TABLE_NAME = 'transactions'
 
 
@@ -44,16 +44,18 @@ class CSVTransactions:
     }
 
     def _get_transactions(self):
-        with open("transactions.csv", "r") as csv_file:
+        with open(CSV_DIR, "r") as csv_file:
             total_balance = 0
-            average_debit = 0
-            average_credit = 0
+            debit_average = 0
+            debit_transactions_number =  0
+            credit_average = 0
+            credit_transactions_number = 0
             transactions_by_month = {}
             csv_reader = csv.DictReader(csv_file)
 
             for row in csv_reader:
                 date = row.get('Date')
-                month_number = date.split('/')[0]
+                month_number = date.split('-')[1]
                 month_name = self.months[month_number]
 
                 transactions_by_month[month_name] = transactions_by_month.get(month_name, 0) + 1
@@ -62,15 +64,16 @@ class CSVTransactions:
                 row_transaction = float(row.get("Transaction", 0))
     
                 if row_transaction > 0:
-                    average_debit += float(row.get("Transaction", 0))
+                    debit_average += float(row.get("Transaction", 0))
+                    debit_transactions_number += 1
                 else:
-                    average_credit = float(row.get("Transaction", 0))
+                    credit_average = float(row.get("Transaction", 0))
+                    credit_transactions_number += 1
 
-        
         transactions_resume = {
-            'average_debit': average_debit,
-            'average_credit': average_credit,
-            'total_balance': average_debit + average_credit,
+            'average_debit': debit_average/debit_transactions_number,
+            'average_credit': credit_average/credit_transactions_number,
+            'total_balance': total_balance,
         }
 
         return transactions_by_month, transactions_resume
@@ -194,9 +197,7 @@ class CSVTransactions:
         except psycopg2.OperationalError as exception:
             logger.error("ERROR: Error connecting to the database")
             logger.error(exception)
-            print(exception)
 
-        csv_file = open(CSV_DIR, 'r')
         df = pd.read_csv(CSV_DIR)
         df.set_index('Id', inplace=True)
 
