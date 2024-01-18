@@ -34,8 +34,9 @@ test-local:
 
 
 test-deploy:
-	curl "${AWS_INVOKE_URL}" -d '{}'
-	curl "${AWS_INVOKE_URL}" -d '{"emails":"ente011@gmail.com"}'
+	curl "${AWS_INVOKE_URL}" --header "Content-Type: application/json" -d '{}'
+	curl "${AWS_INVOKE_URL}" --header "Content-Type: application/json" --data-raw '{"emails":"ente011@gmail.com"}'
 
 
 # https://docs.docker.com/engine/reference/commandline/compose_down/
+# https://github.com/NaysanSaran/pandas2postgresql/blob/master/notebooks/Psycopg2_Bulk_Insert_copy_from.ipynb

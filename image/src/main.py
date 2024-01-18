@@ -88,8 +88,6 @@ class CSVTransactions:
 
         group_transactions = df.groupby(df['Date'].dt.strftime('%B'), sort=False)
         transactions_by_month = group_transactions.count().to_dict()
-        print(transactions_by_month)
-
 
         transactions_resume = {
             'average_debit': df[df['Transaction'] < 0]['Transaction'].mean(),
@@ -191,7 +189,7 @@ class CSVTransactions:
         msg['From'] = os.environ['EMAIL_FROM']
         msg['To'] = emails_to_send
 
-        msg.add_header('Content-Type', 'text/html')
+        msg.add_header('Content-Type', 'text/html')    
         msg.set_payload(self._generate_body())
 
         with smtplib.SMTP(host=os.environ['EMAIL_HOST'], port=os.environ['EMAIL_PORT']) as server:
@@ -205,6 +203,7 @@ class CSVTransactions:
             )
 
     def insert_data_from_file(self):
+
         try:
             connection = psycopg2.connect(
                 database=POSTGRES_DB,
@@ -224,9 +223,6 @@ class CSVTransactions:
         buffer = StringIO()
         df.to_csv(buffer, index_label='Id', header=False)
         buffer.seek(0)
-
-        contents = buffer.getvalue()
-        print(contents)
 
         try:
             cursor = connection.cursor()
@@ -269,8 +265,3 @@ def handler(event, context):
         'statusCode': 200,
         'body': 'email sended'
     }
-
-
-# csv_transactions = CSVTransactions()
-# csv_transactions.send_email_smtp('ente011@gmail.com')
-# csv_transactions.insert_data_from_file()
